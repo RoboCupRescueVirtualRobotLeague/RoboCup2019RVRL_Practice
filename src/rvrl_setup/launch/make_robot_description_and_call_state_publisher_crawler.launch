@@ -19,17 +19,28 @@
           respawn="false"
           name="spawn_model"
           args="-file $(find crawler_robot_ros)/sdf/model.sdf -sdf -x $(arg xcoordinate) -y $(arg ycoordinate) -z $(arg zcoordinate) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw) -model $(arg robot_name)"/>
+
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+   <param name="publish_frequency" type="double" value="15.0" />
+   <param name="use_gui" value="false"/>
+  </node>
+   <param name="tf_prefix" type="string" value="$(arg robot_name)"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher"  type="state_publisher">
+   <param name="publish_frequency" type="double" value="15.0" />
+   <param name="tf_prefix" type="string" value="$(arg robot_name)"/>
+  </node>  
+
+<!--
     <node name="robot_state_publisher" 
           pkg="robot_state_publisher" type="robot_state_publisher" 
           output="screen">
-<!--
       <remap from="joint_states" to="/$(arg robot_name)/joint_states"/>
       <remap from="robot_description" to="/$(arg robot_name)/robot_description"/>
       <param name="publish_frequency" type="double" value="100.0"/>
       <param name="tf_prefix" type="string" value="$(arg robot_name)"/>
--->
     </node>  
-    <!-- load the controllers -->
+-->
+    <!-- load the controllers 
     <param name="joint_state_controller/type" 
            value="joint_state_controller/JointStateController"/>
     <param name="joint_state_controller/publish_rate" 
@@ -39,6 +50,7 @@
           output="screen"
           args="joint_state_controller" >
     </node>
+-->
 <!-- Calling joint_state_publisher is a former method.
     <node name="joint_state_publisher" 
           pkg="joint_state_publisher" type="joint_state_publisher" 
@@ -47,7 +59,7 @@
       <param name="use_gui" value="false" />
     </node>
 -->
-    <!-- Publishing tf_static for included models. -->
+    <!-- Publishing tf_static for included models. 
     <node name="tf_static_hokuyo_link" 
           pkg="tf" type="static_transform_publisher" 
           args="0 0 0 0 0 0 $(arg robot_name)/hokuyo_link
@@ -56,6 +68,7 @@
           pkg="tf" type="static_transform_publisher" 
           args="0 0 0 0 0 0 $(arg robot_name)/camera_link
                             $(arg robot_name)/camera::camera_link 100"/>
+    -->
     <!-- Publishing tf_static between odom and base_link. -->
     <node name="tf_static_odom_base" 
           pkg="tf" type="static_transform_publisher" 
